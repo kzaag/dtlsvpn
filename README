@@ -48,7 +48,7 @@ example setup using namespaces:
 		allow incoming veth traffic
 			iptables -A INPUT -i vethc -j ACCEPT
 
-		arp (if you have it firewalled) so both sides can resolve their macs
+		arp (if you have it firewalled) so both sides can resolve their addrs
 			arptables -A INPUT -i vethc -j ACCEPT
 			arptables -A OUTPUT -o vethc -j ACCEPT
 
