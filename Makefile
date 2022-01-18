@@ -3,7 +3,7 @@ OPTS=-Wall -Wpedantic -pedantic -Wextra
 FILES=main.c
 
 build:
-	@gcc -lssl -lcrypto -lpthread $(FILES) $(OPTS) -D SERVER -o bin/vpn
+	@gcc -lssl -lcrypto -lpthread $(FILES) $(OPTS) -o bin/vpn
 
 ca:
 	openssl ecparam -name prime256v1 -genkey -noout -out ca.key
