@@ -1,5 +1,5 @@
 
-PoC p2p vpn tunnel
+p2p vpn tunnel
 [L2 -> L3 -> UDP -> DTLS [ IP4/6 -> whatever ] ]
 
 it's very much work in progress.
