@@ -1,14 +1,10 @@
 
-p2p vpn tunnel
+experimental point-to-point vpn tunnel
 [L2 -> L3 -> UDP -> DTLS [ IP4/6 -> whatever ] ]
 
-it's very much work in progress.
-
-get started:
-
-options to run client and server without running into conflicts with routing:
-1. putting them on separate boxes / vms (thats standard - boring solution)
-2. putting them in separate namespaces (see below)
+options:
+1. client & server on separate boxes / vms (thats standard - boring solution)
+2. client & server in separate namespaces (see below)
 3. configuring policy based routing (sounds cool, should be possible, but didn't test it)
 
 example setup using namespaces:
