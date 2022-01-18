@@ -1,6 +1,6 @@
 
 experimental point-to-point vpn tunnel
-[L2 -> L3 -> UDP -> DTLS [ IP4/6 -> whatever ] ]
+[L2 -> L3 -> UDP -> DTLS [ IP4/6 -> L4 -> ... ] ]
 
 options:
 1. client & server on separate boxes / vms (thats standard - boring solution)
