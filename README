@@ -1,87 +1,34 @@
-
-experimental point-to-point vpn tunnel
+Little point-to-point vpn tunnel
 [L2 -> L3 -> UDP -> DTLS [ IP4/6 -> L4 -> ... ] ]
 
-options:
-1. client & server on separate boxes / vms (thats standard - boring solution)
-2. client & server in separate namespaces (see below)
-3. configuring policy based routing (sounds cool, should be possible, but didn't test it)
+It's functions are:
+0. authenticated encryption
+1. PKI authentication (both sides) based on common CA
+2. persisted connection:
+	if something happens on the link, 
+	both sides will to their best to restart connection.
 
-example setup using namespaces:
+Quick start, single box
 
-1. for authenticating peers this PoC uses certificates signed by private CA
+0. linux required
 
-	1.1 create ca:
-		make ca
+1. make build
 
-	1.2 create client certificate request:
-		make csr NAME=1
+on single box some routing table separation is needed
+there are multiple ways to accomplish it, 
+but i'm using network namespaces
+2. make netns
 
-	1.3 generate signed certificate
-		make sign NAME=1
+from one shell
+3. make netns-client
 
-	1.4 repeat for server
-		make csr NAME=2
-		make sign NAME=2
+from other shell
+4. make netns-server
 
-2. networking
+add routes which you want to tunnel through vpn.
+for example to route all google traffic, you can add following routes:
+5. make add-google-routes
 
-	2.1 create netns
-		ip netns add vpnc
-
-	2.2 create veth pair to communicate between namespaces
-		ip link add vethc type veth peer name ethc
-
-	2.3 move one end to client ns
-		ip link set ethc netns vpnc
-
-	2.4 setup client veth end
-		ip netns exec vpnc ip a a 172.30.2.6/30 dev ethc
-		ip netns exec vpnc ip link set ethc up
-
-	2.5 setup host veth end
-		ip a a 172.30.2.5/30 dev vethc
-		ip link set vethc up
-
-	2.6 host may have firewall configured, in that case:
-		
-		allow incoming veth traffic
-			iptables -A INPUT -i vethc -j ACCEPT
-
-		arp (if you have it firewalled) so both sides can resolve their addrs
-			arptables -A INPUT -i vethc -j ACCEPT
-			arptables -A OUTPUT -o vethc -j ACCEPT
-
-	- the rest of iptables rules will be managed by vpn.
-
-3. after you are done with netns setup, you may...
-
-	3.1 build and cd into output
-		make && cd bin/
-
-	3.2 from one pty run client...
-		ip netns exec vpnc ./vpn -c \
-			-C ../2.cert \
-			-K ../2.key \
-			-A ../ca.cert \
-			-h 172.30.2.5 \
-			-p 3456 \
-			-n tun0 \
-			-a 10.1.2.230/30
-
-	3.3 from other run server...
-		./vpn -s \
-			-C ../1.cert \
-			-K ../1.key \
-			-A ../ca.cert \
-			-h 172.30.2.5 \
-			-p 3456 \
-			-n tun0 \
-			-a 10.1.2.229/30
-
-4. finally routing for client side.
-	
-	4.1 note that this must be done after client is started (otherwise tun0 is missing)
-		ip netns exec vpnc ip route add 45.33.0.0/17 dev tun0
-
+test it
+6. ip netns exec vpns firefox youtube.com
 
