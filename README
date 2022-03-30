@@ -1,34 +1,42 @@
 Little point-to-point vpn tunnel
 [L2 -> L3 -> UDP -> DTLS [ IP4/6 -> L4 -> ... ] ]
 
-It's functions are:
+Its functions are:
 0. authenticated encryption
 1. PKI authentication (both sides) based on common CA
 2. persisted connection:
-	if something happens on the link, 
-	both sides will to their best to restart connection.
+	if something happens on the link both sides will to their best to restart connection.
 
-Quick start, single box
+Quick start, single box poc using netns
 
-0. linux required
+create ca and generate server and client key-cert pairs
+0. make allcert
 
+build vpn
 1. make build
 
-on single box some routing table separation is needed
-there are multiple ways to accomplish it, 
-but i'm using network namespaces
-2. make netns
+create and setup netns
+1. sudo make netns
 
 from one shell
-3. make netns-client
+2. sudo make netns-client
 
 from other shell
-4. make netns-server
+3. sudo make netns-server
 
 add routes which you want to tunnel through vpn.
 for example to route all google traffic, you can add following routes:
-5. make add-google-routes
+4. sudo make add-google-routes
 
-test it
-6. ip netns exec vpns firefox youtube.com
+test it.
+this is an example you can choose to test vpn with any application running from within vpns namespace
+6. sudo ip netns exec vpns /bin/bash
+   su <your user>
+   
+   # set up some basic env variables, to browser to connect to sound server
+   # note that your xdg and dbug configuration may vary between different distros
+   export XDG_RUNTIME_DIR=/run/user/$(id -u)
+   #export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
+   
+   chromium youtube.com
 

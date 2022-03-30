@@ -4,6 +4,7 @@ FILES=main.c
 OUT=bin/vpn
 
 build:
+	mkdir -p bin
 	@gcc $(FILES) $(OPTS) -o $(OUT)
 
 build-asan:
@@ -42,6 +43,9 @@ VETH_NETNS_M=/30
 VETH_INITNS_A=172.30.2.5
 VETH_INITNS_M=/30
 
+ARPTABLES=arptables-nft
+IPTABLES=iptables
+
 netns:
 	ip netns add $(NETNS_NAME)
 	ip link add $(VETH_INITNS) type veth peer name $(VETH_NETNS)
@@ -54,9 +58,16 @@ netns:
 	ip a a $(VETH_INITNS_A)$(VETH_NETNS_M) dev $(VETH_INITNS)
 	ip link set $(VETH_INITNS) up
 
-	iptables -A INPUT -i $(VETH_INITNS) -j ACCEPT
-	arptables -A INPUT -i $(VETH_INITNS) -j ACCEPT
-	arptables -A OUTPUT -o $(VETH_INITNS) -j ACCEPT
+	$(IPTABLES) -A INPUT -i $(VETH_INITNS) -j ACCEPT
+	$(ARPTABLES) -A INPUT -i $(VETH_INITNS) -j ACCEPT
+	$(ARPTABLES) -A OUTPUT -o $(VETH_INITNS) -j ACCEPT
+
+netns-rollback:
+	ip netns del $(NETNS_NAME) || :
+	ip link del $(VETH_INITNS) || :
+	$(IPTABLES) -D INPUT -i $(VETH_INITNS) -j ACCEPT || :
+	$(ARPTABLES) -D INPUT -i $(VETH_INITNS) -j ACCEPT || :
+	$(ARPTABLES) -D OUTPUT -o $(VETH_INITNS) -j ACCEPT || :
 
 netns-client:
 	cd bin && ip netns exec $(NETNS_NAME) ./vpn -c \
