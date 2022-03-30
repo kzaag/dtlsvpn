@@ -93,7 +93,7 @@ google-routes:
 	@curl -s "https://www.gstatic.com/ipranges/goog.json" | \
 	 	jq -r '.prefixes[].ipv4Prefix | select(. != null)' | \
 		xargs printf "ip route add \"%s\" dev tun0\n" > add-google-routes.sh
-	@awk "\$$1=\"nameserver\" {print \$$2}" /etc/resolv.conf | \
+	@awk "\$$1==\"nameserver\" {print \$$2}" /etc/resolv.conf | \
 		xargs printf "ip route add %s/32 dev tun0\n" >> add-google-routes.sh
 	@sed 's/add/delete/g' add-google-routes.sh > delete-google-routes.sh
 

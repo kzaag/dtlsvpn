@@ -36,7 +36,7 @@ this is an example you can choose to test vpn with any application running from 
    # set up some basic env variables, to browser to connect to sound server
    # note that your xdg and dbug configuration may vary between different distros
    export XDG_RUNTIME_DIR=/run/user/$(id -u)
-   #export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
+   export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
    
    chromium youtube.com
 

@@ -4,7 +4,11 @@ ip route add "8.34.208.0/20" dev tun0
 ip route add "8.35.192.0/20" dev tun0
 ip route add "23.236.48.0/20" dev tun0
 ip route add "23.251.128.0/19" dev tun0
-ip route add "34.64.0.0/10" dev tun0
+ip route add "34.64.0.0/11" dev tun0
+ip route add "34.96.0.0/12" dev tun0
+ip route add "34.112.0.0/14" dev tun0
+ip route add "34.116.0.0/20" dev tun0
+ip route add "34.120.0.0/13" dev tun0
 ip route add "34.128.0.0/10" dev tun0
 ip route add "35.184.0.0/13" dev tun0
 ip route add "35.192.0.0/14" dev tun0
@@ -59,4 +63,4 @@ ip route add "209.85.128.0/17" dev tun0
 ip route add "216.58.192.0/19" dev tun0
 ip route add "216.73.80.0/20" dev tun0
 ip route add "216.239.32.0/19" dev tun0
-ip route add 1.1.1.1/32 dev tun0
+ip route add 8.8.8.8/32 dev tun0
